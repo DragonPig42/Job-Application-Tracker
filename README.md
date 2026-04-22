@@ -2,6 +2,12 @@
 
 A full-stack job application tracker built with React, Vite, Tailwind CSS, React Router, Flask, SQLAlchemy, and SQLite.
 
+## Live Demo
+
+Demo website: https://job-applications-tracker.dragonpig.workers.dev/
+
+The demo is hosted with a React/Vite frontend served through Cloudflare Workers Static Assets and a Flask API backend connected over REST. The backend uses SQLite for the project database.
+
 ## Project Structure
 
 ```text
@@ -21,6 +27,7 @@ A full-stack job application tracker built with React, Vite, Tailwind CSS, React
     +-- postcss.config.js
     +-- tailwind.config.js
     +-- vite.config.js
+    +-- public/
     +-- src/
         +-- App.jsx
         +-- main.jsx
