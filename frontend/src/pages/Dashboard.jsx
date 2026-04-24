@@ -12,7 +12,6 @@ const statusBarStyles = {
   Interviewing: "bg-orange-500",
   Offer: "bg-emerald-600",
   Rejected: "bg-red-600",
-  Ghosted: "bg-zinc-500",
 };
 
 export default function Dashboard() {

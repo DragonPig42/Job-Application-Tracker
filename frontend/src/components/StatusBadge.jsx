@@ -5,7 +5,6 @@ const statusStyles = {
   Interviewing: "bg-orange-50 text-orange-700 ring-orange-200",
   Offer: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   Rejected: "bg-red-50 text-red-700 ring-red-200",
-  Ghosted: "bg-zinc-100 text-zinc-700 ring-zinc-300",
 };
 
 export default function StatusBadge({ status }) {

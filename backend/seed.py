@@ -71,9 +71,9 @@ SAMPLE_APPLICATIONS = [
         "location": "Denver, CO",
         "salary": "$110k - $130k",
         "job_url": "https://example.com/jobs/atlas-software-engineer",
-        "status": "Ghosted",
+        "status": "Rejected",
         "days_ago": 35,
-        "notes": ["No response after recruiter follow-up."],
+        "notes": ["Rejected after recruiter follow-up."],
     },
     {
         "company": "Pioneer Robotics",

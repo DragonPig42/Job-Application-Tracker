@@ -13,8 +13,15 @@ STATUSES = [
     "Interviewing",
     "Offer",
     "Rejected",
-    "Ghosted",
 ]
+
+DEPRECATED_STATUS_MAP = {
+    "Ghosted": "Rejected",
+}
+
+
+def normalize_status(status):
+    return DEPRECATED_STATUS_MAP.get(status, status)
 
 
 def utc_now():
@@ -77,7 +84,7 @@ class Application(db.Model):
             "location": self.location,
             "salary": self.salary,
             "job_url": self.job_url,
-            "status": self.status,
+            "status": normalize_status(self.status),
             "date_applied": iso_date(self.date_applied),
             "created_at": iso_datetime(self.created_at),
             "updated_at": iso_datetime(self.updated_at),
@@ -131,7 +138,7 @@ class StatusHistory(db.Model):
         return {
             "id": self.id,
             "application_id": self.application_id,
-            "old_status": self.old_status,
-            "new_status": self.new_status,
+            "old_status": normalize_status(self.old_status),
+            "new_status": normalize_status(self.new_status),
             "changed_at": iso_datetime(self.changed_at),
         }

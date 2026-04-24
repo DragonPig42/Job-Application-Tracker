@@ -3,7 +3,14 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from sqlalchemy import or_
 
-from models import Application, Note, STATUSES, StatusHistory, db
+from models import (
+    Application,
+    DEPRECATED_STATUS_MAP,
+    Note,
+    STATUSES,
+    StatusHistory,
+    db,
+)
 
 
 applications_bp = Blueprint("applications", __name__)
@@ -42,13 +49,22 @@ def validate_application_payload(data):
 
 def apply_application_payload(application, data):
     # Normalize blank optional fields to None before storing them.
-    application.company = data.get("company", "").strip()
-    application.role = data.get("role", "").strip()
-    application.location = data.get("location", "").strip() or None
-    application.salary = data.get("salary", "").strip() or None
-    application.job_url = data.get("job_url", "").strip() or None
+    application.company = clean_required_text(data.get("company"))
+    application.role = clean_required_text(data.get("role"))
+    application.location = clean_optional_text(data.get("location"))
+    application.salary = clean_optional_text(data.get("salary"))
+    application.job_url = clean_optional_text(data.get("job_url"))
     application.status = data.get("status")
     application.date_applied = parse_date(data.get("date_applied"))
+
+
+def clean_required_text(value):
+    return str(value or "").strip()
+
+
+def clean_optional_text(value):
+    cleaned = str(value or "").strip()
+    return cleaned or None
 
 
 @applications_bp.get("")
@@ -67,7 +83,12 @@ def list_applications():
     if status and status != "All":
         if status not in STATUSES:
             return error_response("Invalid status")
-        query = query.filter(Application.status == status)
+        deprecated_matches = [
+            old_status
+            for old_status, replacement in DEPRECATED_STATUS_MAP.items()
+            if replacement == status
+        ]
+        query = query.filter(Application.status.in_([status, *deprecated_matches]))
 
     if sort == "date_asc":
         query = query.order_by(Application.date_applied.asc(), Application.created_at.asc())

@@ -33,7 +33,6 @@ export const STATUSES = [
   "Interviewing",
   "Offer",
   "Rejected",
-  "Ghosted",
 ];
 
 export function getDashboardSummary() {
