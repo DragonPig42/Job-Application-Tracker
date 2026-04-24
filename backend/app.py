@@ -28,7 +28,10 @@ def create_app():
     app.config["JSON_SORT_KEYS"] = False
 
     # During local development, Vite may be opened through localhost or 127.0.0.1.
-    default_cors = "http://localhost:5173,http://127.0.0.1:5173"
+    default_cors = (
+        "http://localhost:5173,http://127.0.0.1:5173,"
+        "http://localhost:5180,http://127.0.0.1:5180"
+    )
     cors_origins = os.getenv("CORS_ORIGINS", default_cors).split(",")
     CORS(app, resources={r"/api/*": {"origins": cors_origins}})
 

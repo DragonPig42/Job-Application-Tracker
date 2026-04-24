@@ -1,12 +1,12 @@
 # Job Application Tracker
 
-A full-stack job application tracker built with React, Vite, Tailwind CSS, React Router, Flask, SQLAlchemy, and SQLite.
+A full-stack job application tracker built with React, Vite, Tailwind CSS, React Router, Flask, SQLAlchemy, and SQLite/PostgreSQL-ready database configuration.
 
 ## Live Demo
 
 Demo website: https://job-applications-tracker.dragonpig.workers.dev/
 
-The demo is hosted with a React/Vite frontend served through Cloudflare Workers Static Assets and a Flask API backend connected over REST. The backend uses SQLite for the project database.
+The demo is hosted with a React/Vite frontend served through Cloudflare Workers Static Assets and a Flask API backend connected over REST. The backend can run with SQLite locally or PostgreSQL by setting `DATABASE_URL`.
 
 ## Project Structure
 
@@ -75,6 +75,28 @@ Useful endpoints:
 
 SQLite is used by default and creates `backend/job_tracker.db`. To upgrade later to PostgreSQL, set `DATABASE_URL` before starting Flask.
 
+## PostgreSQL Setup
+
+The backend uses SQLite when `DATABASE_URL` is not set. To run the same app with PostgreSQL, create a PostgreSQL database and set `DATABASE_URL` before starting the backend.
+
+Example `backend/.env`:
+
+```text
+DATABASE_URL=postgresql://postgres:password@localhost:5432/job_tracker
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+```
+
+Then install dependencies and seed the PostgreSQL database:
+
+```bash
+cd backend
+pip install -r requirements.txt
+python seed.py
+python app.py
+```
+
+The `seed.py` script resets whichever database `DATABASE_URL` points to. Do not run it against a database that contains real data you want to keep.
+
 ## Frontend Setup
 
 From the `frontend` folder:
@@ -102,8 +124,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
    ```bash
    cd backend
-   .venv\Scripts\activate
-   python app.py
+   .\.venv\Scripts\python.exe app.py
    ```
 
 2. Start the frontend in another terminal:
