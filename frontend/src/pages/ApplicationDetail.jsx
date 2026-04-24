@@ -7,8 +7,6 @@ import {
   addNote,
   deleteApplication,
   getApplication,
-  STATUSES,
-  updateStatus,
 } from "../services/api.js";
 
 export default function ApplicationDetail() {
@@ -37,16 +35,6 @@ export default function ApplicationDetail() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
-  }
-
-  async function handleStatusChange(newStatus) {
-    // Status changes use the lightweight PATCH endpoint and refresh local state.
-    try {
-      const payload = await updateStatus(id, newStatus);
-      setApplication(payload.application);
-    } catch (err) {
-      setError(err.message);
-    }
   }
 
   async function handleAddNote(event) {
@@ -162,23 +150,7 @@ export default function ApplicationDetail() {
 
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="rounded-md border border-line bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-ink">Update status</h2>
-          <label className="mt-4 block">
-            <span className="sr-only">Status</span>
-            <select
-              value={application.status}
-              onChange={(event) => handleStatusChange(event.target.value)}
-              className="focus-ring h-11 w-full rounded-md border border-line bg-white px-3 text-sm"
-            >
-              {STATUSES.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <h2 className="mt-8 text-lg font-semibold text-ink">Status history</h2>
+          <h2 className="text-lg font-semibold text-ink">Status history</h2>
           <ol className="mt-4 space-y-3">
             {application.status_history.length ? (
               application.status_history.map((entry) => (

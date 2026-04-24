@@ -86,7 +86,7 @@ export default function ApplicationFormPage() {
           </p>
         </div>
         <Link
-          to={isEditMode ? `/applications/${id}` : "/applications"}
+          to="/applications"
           className="text-sm font-semibold text-brand-700 hover:text-brand-600"
         >
           Back
