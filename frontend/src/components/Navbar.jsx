@@ -17,7 +17,7 @@ export default function Navbar() {
             JT
           </span>
           <span className="text-lg font-semibold tracking-normal">
-            Job Application Tracker
+            Job Application Tracker Demo
           </span>
         </Link>
         <div className="flex flex-wrap items-center gap-2">
