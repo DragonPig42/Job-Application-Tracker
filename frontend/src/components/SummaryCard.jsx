@@ -1,9 +1,10 @@
 export default function SummaryCard({ label, value, tone = "default" }) {
   const tones = {
     default: "border-l-brand-600",
-    blue: "border-l-sky-600",
+    blue: "border-l-blue-600",
     green: "border-l-emerald-600",
-    orange: "border-l-orange-600",
+    orange: "border-l-red-600",
+    interview: "border-l-orange-500",
     slate: "border-l-civic",
   };
 

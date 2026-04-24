@@ -5,6 +5,16 @@ import StatusBadge from "../components/StatusBadge.jsx";
 import SummaryCard from "../components/SummaryCard.jsx";
 import { getDashboardSummary, STATUSES } from "../services/api.js";
 
+const statusBarStyles = {
+  Wishlist: "bg-slate-500",
+  Applied: "bg-blue-600",
+  OA: "bg-amber-500",
+  Interviewing: "bg-orange-500",
+  Offer: "bg-emerald-600",
+  Rejected: "bg-red-600",
+  Ghosted: "bg-zinc-500",
+};
+
 export default function Dashboard() {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState("");
@@ -38,6 +48,7 @@ export default function Dashboard() {
         <SummaryCard
           label="Interviewing"
           value={summary.by_status.Interviewing || 0}
+          tone="interview"
         />
         <SummaryCard label="Offer" value={summary.by_status.Offer || 0} tone="green" />
         <SummaryCard
@@ -64,7 +75,9 @@ export default function Dashboard() {
                   </div>
                   <div className="h-3 overflow-hidden rounded-md bg-slate-100">
                     <div
-                      className="h-full rounded-md bg-brand-600"
+                      className={`h-full rounded-md ${
+                        statusBarStyles[status] || "bg-brand-600"
+                      }`}
                       style={{ width }}
                     />
                   </div>
