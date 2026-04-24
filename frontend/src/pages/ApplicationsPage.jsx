@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import SearchFilterBar from "../components/SearchFilterBar.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
-import { getApplications } from "../services/api.js";
+import { deleteApplication, getApplications } from "../services/api.js";
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState([]);
@@ -11,23 +12,42 @@ export default function ApplicationsPage() {
   const [status, setStatus] = useState("All");
   const [sort, setSort] = useState("date_desc");
   const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [applicationToDelete, setApplicationToDelete] = useState(null);
   const [error, setError] = useState("");
+
+  function loadApplications() {
+    setIsLoading(true);
+    getApplications({ search, status, sort })
+      .then((payload) => {
+        setApplications(payload.applications);
+        setError("");
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }
 
   useEffect(() => {
     // Small debounce keeps typing in the search box from firing a request per keypress.
-    const timeout = setTimeout(() => {
-      setIsLoading(true);
-      getApplications({ search, status, sort })
-        .then((payload) => {
-          setApplications(payload.applications);
-          setError("");
-        })
-        .catch((err) => setError(err.message))
-        .finally(() => setIsLoading(false));
-    }, 200);
+    const timeout = setTimeout(loadApplications, 200);
 
     return () => clearTimeout(timeout);
   }, [search, status, sort]);
+
+  async function handleDelete() {
+    if (!applicationToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteApplication(applicationToDelete.id);
+      setApplicationToDelete(null);
+      loadApplications();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -98,6 +118,13 @@ export default function ApplicationsPage() {
                         >
                           Edit
                         </Link>
+                        <button
+                          type="button"
+                          onClick={() => setApplicationToDelete(application)}
+                          className="font-semibold text-orange-700 hover:text-orange-600"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </Td>
                   </tr>
@@ -113,6 +140,20 @@ export default function ApplicationsPage() {
           </table>
         </div>
       </section>
+
+      <ConfirmDialog
+        open={Boolean(applicationToDelete)}
+        title="Delete application?"
+        message={
+          applicationToDelete
+            ? `This will permanently remove ${applicationToDelete.company} - ${applicationToDelete.role}, including notes and status history.`
+            : ""
+        }
+        confirmLabel="Delete"
+        onConfirm={handleDelete}
+        onCancel={() => setApplicationToDelete(null)}
+        isBusy={isDeleting}
+      />
     </div>
   );
 }
