@@ -19,7 +19,7 @@ export default function Navbar() {
             </span>
             <span>
               <span className="block text-xl font-bold tracking-normal text-ink">
-                Job Application Tracker
+                Job Application Tracker Demo
               </span>
               <span className="block text-sm font-medium text-slate-600">
                 Track applications, notes, and outcomes
