@@ -31,24 +31,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
-            Pipeline overview
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-normal">
-            Your job search at a glance
-          </h1>
-        </div>
-        <Link
-          to="/applications/new"
-          className="focus-ring inline-flex items-center justify-center rounded-md bg-ink px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-700"
-        >
-          Add Application
-        </Link>
-      </div>
-
+    <div className="space-y-7">
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <SummaryCard label="Total applications" value={summary.total} tone="slate" />
         <SummaryCard label="Applied" value={summary.by_status.Applied || 0} tone="blue" />
@@ -67,7 +50,7 @@ export default function Dashboard() {
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <section className="rounded-md border border-line bg-white p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Applications by status</h2>
+            <h2 className="text-lg font-semibold text-ink">Applications by status</h2>
           </div>
           <div className="space-y-4">
             {STATUSES.map((status) => {
@@ -93,7 +76,7 @@ export default function Dashboard() {
 
         <section className="rounded-md border border-line bg-white p-5 shadow-sm">
           <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Recent applications</h2>
+            <h2 className="text-lg font-semibold text-ink">Recent applications</h2>
             <Link
               to="/applications"
               className="text-sm font-semibold text-brand-700 hover:text-brand-600"

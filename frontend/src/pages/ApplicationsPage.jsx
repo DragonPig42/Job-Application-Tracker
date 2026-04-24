@@ -31,23 +31,6 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
-            Applications
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-normal">
-            Manage your opportunities
-          </h1>
-        </div>
-        <Link
-          to="/applications/new"
-          className="focus-ring inline-flex items-center justify-center rounded-md bg-ink px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-700"
-        >
-          Add Application
-        </Link>
-      </div>
-
       <SearchFilterBar
         search={search}
         setSearch={setSearch}
@@ -58,9 +41,15 @@ export default function ApplicationsPage() {
       />
 
       <section className="overflow-hidden rounded-md border border-line bg-white shadow-sm">
+        <div className="border-b border-line px-5 py-4">
+          <h2 className="text-lg font-semibold text-ink">Application records</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Sorted by application date unless a different order is selected.
+          </p>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-line text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-mist text-xs uppercase tracking-wide text-slate-600">
               <tr>
                 <Th>Company</Th>
                 <Th>Role</Th>
@@ -86,7 +75,7 @@ export default function ApplicationsPage() {
                 </tr>
               ) : applications.length ? (
                 applications.map((application) => (
-                  <tr key={application.id} className="hover:bg-slate-50">
+                  <tr key={application.id} className="hover:bg-brand-50/60">
                     <Td className="font-semibold text-ink">{application.company}</Td>
                     <Td>{application.role}</Td>
                     <Td>{application.location || "Not set"}</Td>

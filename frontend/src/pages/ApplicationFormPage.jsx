@@ -69,21 +69,29 @@ export default function ApplicationFormPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div className="rounded-md border border-line bg-white p-5 shadow-sm">
+        <p className="text-sm font-semibold text-slate-600">
+          You are at {isEditMode ? "Edit application" : "New application"}
+        </p>
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-brand-700">
+          <p className="text-sm font-semibold text-brand-700">
             {isEditMode ? "Edit application" : "New application"}
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-normal">
+          <h1 className="mt-2 text-3xl font-bold tracking-normal text-ink">
             {isEditMode ? "Update application details" : "Add a new opportunity"}
           </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+            Enter the key role details and keep notes for follow-up actions.
+          </p>
         </div>
         <Link
           to={isEditMode ? `/applications/${id}` : "/applications"}
-          className="text-sm font-semibold text-slate-700 hover:text-ink"
+          className="text-sm font-semibold text-brand-700 hover:text-brand-600"
         >
           Back
         </Link>
+        </div>
       </div>
 
       {error ? (

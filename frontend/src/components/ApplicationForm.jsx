@@ -54,7 +54,14 @@ export default function ApplicationForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid gap-4 rounded-md border border-line bg-white p-5 shadow-sm md:grid-cols-2">
+      <div className="rounded-md border border-line bg-white shadow-sm">
+        <div className="border-b border-line px-5 py-4">
+          <h2 className="text-lg font-semibold text-ink">Application information</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Required fields are marked with an asterisk.
+          </p>
+        </div>
+        <div className="grid gap-4 p-5 md:grid-cols-2">
         <Field
           label="Company"
           value={form.company}
@@ -124,6 +131,7 @@ export default function ApplicationForm({
             placeholder="Interview details, follow-up reminders, recruiter names..."
           />
         </label>
+        </div>
       </div>
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

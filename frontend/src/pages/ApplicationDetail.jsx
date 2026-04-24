@@ -104,6 +104,9 @@ export default function ApplicationDetail() {
       ) : null}
 
       <section className="rounded-md border border-line bg-white p-5 shadow-sm">
+        <p className="mb-4 text-sm font-semibold text-slate-600">
+          You are at Application details
+        </p>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-3">
@@ -159,7 +162,7 @@ export default function ApplicationDetail() {
 
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <section className="rounded-md border border-line bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold">Update status</h2>
+          <h2 className="text-lg font-semibold text-ink">Update status</h2>
           <label className="mt-4 block">
             <span className="sr-only">Status</span>
             <select
@@ -175,13 +178,13 @@ export default function ApplicationDetail() {
             </select>
           </label>
 
-          <h2 className="mt-8 text-lg font-semibold">Status history</h2>
+          <h2 className="mt-8 text-lg font-semibold text-ink">Status history</h2>
           <ol className="mt-4 space-y-3">
             {application.status_history.length ? (
               application.status_history.map((entry) => (
                 <li
                   key={entry.id}
-                  className="rounded-md border border-line bg-slate-50 p-3 text-sm"
+                  className="rounded-md border border-line bg-mist p-3 text-sm"
                 >
                   <p className="font-medium">
                     {entry.old_status ? `${entry.old_status} to ${entry.new_status}` : `Created as ${entry.new_status}`}
@@ -198,7 +201,7 @@ export default function ApplicationDetail() {
         </section>
 
         <section className="rounded-md border border-line bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold">Notes</h2>
+          <h2 className="text-lg font-semibold text-ink">Notes</h2>
           <form onSubmit={handleAddNote} className="mt-4 space-y-3">
             <textarea
               value={note}
@@ -221,7 +224,7 @@ export default function ApplicationDetail() {
               application.notes.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-md border border-line bg-slate-50 p-4"
+                  className="rounded-md border border-line bg-mist p-4"
                 >
                   <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
                     {item.content}
