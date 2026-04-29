@@ -6,16 +6,25 @@ import SearchFilterBar from "../components/SearchFilterBar.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 import { deleteApplication, getApplications } from "../services/api.js";
 
+const PAGE_SIZE = 10;
+
 export default function ApplicationsPage() {
   const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [sort, setSort] = useState("date_desc");
+  const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const [applicationToDelete, setApplicationToDelete] = useState(null);
   const [error, setError] = useState("");
+
+  const totalPages = Math.max(1, Math.ceil(applications.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageStart = applications.length ? (currentPage - 1) * PAGE_SIZE : 0;
+  const pageEnd = Math.min(pageStart + PAGE_SIZE, applications.length);
+  const visibleApplications = applications.slice(pageStart, pageEnd);
 
   function loadApplications() {
     setIsLoading(true);
@@ -34,6 +43,16 @@ export default function ApplicationsPage() {
 
     return () => clearTimeout(timeout);
   }, [search, status, sort]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [search, status, sort]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   async function handleDelete() {
     if (!applicationToDelete) return;
@@ -95,7 +114,7 @@ export default function ApplicationsPage() {
                   </td>
                 </tr>
               ) : applications.length ? (
-                applications.map((application) => (
+                visibleApplications.map((application) => (
                   <tr
                     key={application.id}
                     onClick={() => navigate(`/applications/${application.id}`)}
@@ -142,6 +161,40 @@ export default function ApplicationsPage() {
             </tbody>
           </table>
         </div>
+        {!isLoading && !error && applications.length ? (
+          <div className="flex flex-col gap-3 border-t border-line px-5 py-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              Showing {pageStart + 1}-{pageEnd} of {applications.length}
+            </p>
+            {totalPages > 1 ? (
+              <div className="flex items-center gap-2">
+                {currentPage > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => setPage((value) => Math.max(1, value - 1))}
+                    className="focus-ring rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    Previous
+                  </button>
+                ) : null}
+                <span className="rounded-md border border-line bg-mist px-3 py-2 font-semibold text-ink">
+                  Page {currentPage} of {totalPages}
+                </span>
+                {currentPage < totalPages ? (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPage((value) => Math.min(totalPages, value + 1))
+                    }
+                    className="focus-ring rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                  >
+                    Next
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </section>
 
       <ConfirmDialog
