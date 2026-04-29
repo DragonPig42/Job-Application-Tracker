@@ -8,6 +8,7 @@ export default function SummaryCard({ label, value, tone = "default", to }) {
     orange: "border-l-red-600",
     interview: "border-l-orange-500",
     slate: "border-l-civic",
+    wishlist: "border-l-slate-500",
   };
 
   const cardClass = `rounded-md border border-line border-l-4 bg-white p-5 shadow-soft ${

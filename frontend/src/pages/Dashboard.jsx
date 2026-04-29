@@ -40,12 +40,18 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-7">
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <SummaryCard
           label="Total applications"
           value={summary.total}
           tone="slate"
           to="/applications"
+        />
+        <SummaryCard
+          label="Wishlist"
+          value={summary.by_status.Wishlist || 0}
+          tone="wishlist"
+          to={statusFilterPath("Wishlist")}
         />
         <SummaryCard
           label="Applied"
