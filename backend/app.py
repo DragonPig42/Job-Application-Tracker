@@ -65,5 +65,11 @@ app = create_app()
 
 if __name__ == "__main__":
     # Reloader is opt-in so the Windows background dev process stays predictable.
+    host = os.getenv("HOST", "127.0.0.1")
     use_reloader = os.getenv("FLASK_USE_RELOADER", "false").lower() == "true"
-    app.run(debug=True, port=int(os.getenv("PORT", 5000)), use_reloader=use_reloader)
+    app.run(
+        debug=True,
+        host=host,
+        port=int(os.getenv("PORT", 5000)),
+        use_reloader=use_reloader,
+    )

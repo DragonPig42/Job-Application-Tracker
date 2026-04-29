@@ -79,10 +79,40 @@ SQLite is used by default and creates `backend/job_tracker.db`. To upgrade later
 
 The backend uses SQLite when `DATABASE_URL` is not set. To run the same app with PostgreSQL, create a PostgreSQL database and set `DATABASE_URL` before starting the backend.
 
-Example `backend/.env`:
+For local development, this repo includes Docker Compose services for PostgreSQL, Flask, and Vite. Start Docker Desktop first, then run this from the project root:
+
+```bash
+docker compose up --build
+```
+
+Then open:
 
 ```text
-DATABASE_URL=postgresql://postgres:password@localhost:5432/job_tracker
+http://localhost:5180
+```
+
+The Compose setup starts:
+
+- PostgreSQL on `localhost:5432`
+- Flask API on `localhost:5000`
+- React/Vite frontend on `localhost:5180`
+
+To run the stack in the background:
+
+```bash
+docker compose up --build -d
+```
+
+To stop it:
+
+```bash
+docker compose down
+```
+
+Example `backend/.env` for running the backend directly on your host machine against the included Docker database:
+
+```text
+DATABASE_URL=postgresql://jobtracker:jobtracker_dev_password@localhost:5432/job_tracker
 CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 ```
 
