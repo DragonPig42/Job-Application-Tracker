@@ -8,7 +8,6 @@ import { getDashboardSummary, STATUSES } from "../services/api.js";
 const statusBarStyles = {
   Wishlist: "bg-slate-500",
   Applied: "bg-blue-600",
-  OA: "bg-amber-500",
   Interviewing: "bg-orange-500",
   Offer: "bg-emerald-600",
   Rejected: "bg-red-600",
@@ -42,18 +41,35 @@ export default function Dashboard() {
   return (
     <div className="space-y-7">
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <SummaryCard label="Total applications" value={summary.total} tone="slate" />
-        <SummaryCard label="Applied" value={summary.by_status.Applied || 0} tone="blue" />
+        <SummaryCard
+          label="Total applications"
+          value={summary.total}
+          tone="slate"
+          to="/applications"
+        />
+        <SummaryCard
+          label="Applied"
+          value={summary.by_status.Applied || 0}
+          tone="blue"
+          to={statusFilterPath("Applied")}
+        />
         <SummaryCard
           label="Interviewing"
           value={summary.by_status.Interviewing || 0}
           tone="interview"
+          to={statusFilterPath("Interviewing")}
         />
-        <SummaryCard label="Offer" value={summary.by_status.Offer || 0} tone="green" />
+        <SummaryCard
+          label="Offer"
+          value={summary.by_status.Offer || 0}
+          tone="green"
+          to={statusFilterPath("Offer")}
+        />
         <SummaryCard
           label="Rejected"
           value={summary.by_status.Rejected || 0}
           tone="orange"
+          to={statusFilterPath("Rejected")}
         />
       </section>
 
@@ -132,4 +148,8 @@ function StateMessage({ title, message }) {
       <p className="mt-2 text-sm text-slate-600">{message}</p>
     </div>
   );
+}
+
+function statusFilterPath(status) {
+  return `/applications?status=${encodeURIComponent(status)}`;
 }

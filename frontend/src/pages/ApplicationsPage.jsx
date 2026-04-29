@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import SearchFilterBar from "../components/SearchFilterBar.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
-import { deleteApplication, getApplications } from "../services/api.js";
+import { deleteApplication, getApplications, STATUSES } from "../services/api.js";
 
 const PAGE_SIZE = 10;
 
 export default function ApplicationsPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [applications, setApplications] = useState([]);
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("All");
+  const status = getStatusFromParams(searchParams);
   const [sort, setSort] = useState("date_desc");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +55,18 @@ export default function ApplicationsPage() {
     }
   }, [page, totalPages]);
 
+  function handleStatusChange(nextStatus) {
+    const nextParams = new URLSearchParams(searchParams);
+
+    if (nextStatus === "All") {
+      nextParams.delete("status");
+    } else {
+      nextParams.set("status", nextStatus);
+    }
+
+    setSearchParams(nextParams);
+  }
+
   async function handleDelete() {
     if (!applicationToDelete) return;
 
@@ -75,7 +88,7 @@ export default function ApplicationsPage() {
         search={search}
         setSearch={setSearch}
         status={status}
-        setStatus={setStatus}
+        setStatus={handleStatusChange}
         sort={sort}
         setSort={setSort}
       />
@@ -220,6 +233,11 @@ function Th({ children }) {
 
 function Td({ children, className = "" }) {
   return <td className={`whitespace-nowrap px-4 py-4 ${className}`}>{children}</td>;
+}
+
+function getStatusFromParams(searchParams) {
+  const status = searchParams.get("status");
+  return STATUSES.includes(status) ? status : "All";
 }
 
 function formatDate(value) {

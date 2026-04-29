@@ -31,9 +31,9 @@ SAMPLE_APPLICATIONS = [
         "location": "Austin, TX",
         "salary": "$120k - $145k",
         "job_url": "https://example.com/jobs/cloud-harbor-full-stack",
-        "status": "OA",
+        "status": "Applied",
         "days_ago": 5,
-        "notes": ["Online assessment due this week."],
+        "notes": ["Application submitted through the company portal."],
     },
     {
         "company": "BrightPath Health",

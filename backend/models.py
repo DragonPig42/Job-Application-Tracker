@@ -9,7 +9,6 @@ db = SQLAlchemy()
 STATUSES = [
     "Wishlist",
     "Applied",
-    "OA",
     "Interviewing",
     "Offer",
     "Rejected",
@@ -17,6 +16,7 @@ STATUSES = [
 
 DEPRECATED_STATUS_MAP = {
     "Ghosted": "Rejected",
+    "OA": "Applied",
 }
 
 

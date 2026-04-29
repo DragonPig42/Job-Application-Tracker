@@ -29,7 +29,6 @@ export const STATUSES = [
   // Keep this list in sync with backend/models.py.
   "Wishlist",
   "Applied",
-  "OA",
   "Interviewing",
   "Offer",
   "Rejected",
