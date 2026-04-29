@@ -3,20 +3,14 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
-import {
-  addNote,
-  deleteApplication,
-  getApplication,
-} from "../services/api.js";
+import { deleteApplication, getApplication } from "../services/api.js";
 
 export default function ApplicationDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState(null);
-  const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isSavingNote, setIsSavingNote] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -26,7 +20,7 @@ export default function ApplicationDetail() {
   }, [id]);
 
   function refreshApplication() {
-    // The detail endpoint returns the application plus notes and status history.
+    // The detail endpoint returns the application plus related notes.
     setIsLoading(true);
     getApplication(id)
       .then((payload) => {
@@ -35,23 +29,6 @@ export default function ApplicationDetail() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
-  }
-
-  async function handleAddNote(event) {
-    event.preventDefault();
-    if (!note.trim()) return;
-
-    setIsSavingNote(true);
-    try {
-      // Adding a note creates a new row, then reloads to show the newest note first.
-      await addNote(id, note.trim());
-      setNote("");
-      refreshApplication();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsSavingNote(false);
-    }
   }
 
   async function handleDelete() {
@@ -85,50 +62,33 @@ export default function ApplicationDetail() {
 
   return (
     <div className="space-y-6">
+      <Link
+        to="/applications"
+        aria-label="Back to applications"
+        title="Back to applications"
+        className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-md border border-line bg-white text-xl font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
+      >
+        &larr;
+      </Link>
+
       {error ? (
         <div className="rounded-md border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-800">
           {error}
         </div>
       ) : null}
 
-      <section className="rounded-md border border-line bg-white p-5 shadow-sm">
-        <p className="mb-4 text-sm font-semibold text-slate-600">
-          You are at Application details
-        </p>
+      <section className="rounded-md border border-line bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div>
+          <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-normal">
+              <h1 className="text-3xl font-bold tracking-normal text-ink">
                 {application.role}
               </h1>
               <StatusBadge status={application.status} />
             </div>
-            <p className="mt-2 text-lg text-slate-600">{application.company}</p>
-            <dl className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
-              <DetailItem label="Location" value={application.location || "Not set"} />
-              <DetailItem label="Salary" value={application.salary || "Not set"} />
-              <DetailItem
-                label="Date Applied"
-                value={formatDate(application.date_applied)}
-              />
-              <DetailItem
-                label="Job URL"
-                value={
-                  application.job_url ? (
-                    <a
-                      href={application.job_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-brand-700 hover:text-brand-600"
-                    >
-                      Open posting
-                    </a>
-                  ) : (
-                    "Not set"
-                  )
-                }
-              />
-            </dl>
+            <p className="mt-2 text-xl font-semibold text-slate-700">
+              {application.company}
+            </p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -146,52 +106,44 @@ export default function ApplicationDetail() {
             </button>
           </div>
         </div>
+
+        <dl className="mt-6 grid overflow-hidden rounded-md border border-line sm:grid-cols-2">
+          <DetailItem label="Company" value={application.company} />
+          <DetailItem label="Role" value={application.role} />
+          <DetailItem label="Status" value={<StatusBadge status={application.status} />} />
+          <DetailItem
+            label="Date Applied"
+            value={formatDate(application.date_applied)}
+          />
+          <DetailItem label="Location" value={application.location || "Not set"} />
+          <DetailItem label="Salary" value={application.salary || "Not set"} />
+          <DetailItem
+            label="Job URL"
+            value={
+              application.job_url ? (
+                <a
+                  href={application.job_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-brand-700 hover:text-brand-600"
+                >
+                  Open job posting
+                </a>
+              ) : (
+                "Not set"
+              )
+            }
+          />
+          <DetailItem
+            label="Last Updated"
+            value={formatDateTime(application.updated_at)}
+          />
+        </dl>
       </section>
 
-      <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <section className="rounded-md border border-line bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-ink">Status history</h2>
-          <ol className="mt-4 space-y-3">
-            {application.status_history.length ? (
-              application.status_history.map((entry) => (
-                <li
-                  key={entry.id}
-                  className="rounded-md border border-line bg-mist p-3 text-sm"
-                >
-                  <p className="font-medium">
-                    {entry.old_status ? `${entry.old_status} to ${entry.new_status}` : `Created as ${entry.new_status}`}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    {formatDateTime(entry.changed_at)}
-                  </p>
-                </li>
-              ))
-            ) : (
-              <li className="text-sm text-slate-600">No status changes yet.</li>
-            )}
-          </ol>
-        </section>
-
-        <section className="rounded-md border border-line bg-white p-5 shadow-sm">
+      <section className="rounded-md border border-line bg-white p-5 shadow-sm sm:p-6">
           <h2 className="text-lg font-semibold text-ink">Notes</h2>
-          <form onSubmit={handleAddNote} className="mt-4 space-y-3">
-            <textarea
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              rows={4}
-              placeholder="Add interview notes, follow-ups, or next steps"
-              className="focus-ring w-full rounded-md border border-line bg-white px-3 py-3 text-sm"
-            />
-            <button
-              type="submit"
-              disabled={isSavingNote || !note.trim()}
-              className="focus-ring rounded-md bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSavingNote ? "Adding..." : "Add Note"}
-            </button>
-          </form>
-
-          <div className="mt-6 space-y-3">
+          <div className="mt-4 space-y-3">
             {application.notes.length ? (
               application.notes.map((item) => (
                 <article
@@ -211,12 +163,11 @@ export default function ApplicationDetail() {
             )}
           </div>
         </section>
-      </div>
 
       <ConfirmDialog
         open={showDelete}
         title="Delete application?"
-        message="This will permanently remove the application, notes, and status history."
+        message="This will permanently remove the application and its notes."
         confirmLabel="Delete"
         onConfirm={handleDelete}
         onCancel={() => setShowDelete(false)}
@@ -228,9 +179,13 @@ export default function ApplicationDetail() {
 
 function DetailItem({ label, value }) {
   return (
-    <div>
-      <dt className="font-semibold text-slate-500">{label}</dt>
-      <dd className="mt-1 font-medium text-ink">{value}</dd>
+    <div className="border-b border-line bg-white px-4 py-4 last:border-b-0 sm:border-r sm:even:border-r-0">
+      <dt className="text-xs font-semibold uppercase tracking-normal text-slate-500">
+        {label}
+      </dt>
+      <dd className="mt-1 break-words text-base font-semibold text-ink">
+        {value}
+      </dd>
     </div>
   );
 }

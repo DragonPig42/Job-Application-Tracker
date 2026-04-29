@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import ConfirmDialog from "../components/ConfirmDialog.jsx";
 import SearchFilterBar from "../components/SearchFilterBar.jsx";
@@ -7,6 +7,7 @@ import StatusBadge from "../components/StatusBadge.jsx";
 import { deleteApplication, getApplications } from "../services/api.js";
 
 export default function ApplicationsPage() {
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
@@ -95,7 +96,11 @@ export default function ApplicationsPage() {
                 </tr>
               ) : applications.length ? (
                 applications.map((application) => (
-                  <tr key={application.id} className="hover:bg-brand-50/60">
+                  <tr
+                    key={application.id}
+                    onClick={() => navigate(`/applications/${application.id}`)}
+                    className="cursor-pointer hover:bg-brand-50/60"
+                  >
                     <Td className="font-semibold text-ink">{application.company}</Td>
                     <Td>{application.role}</Td>
                     <Td>{application.location || "Not set"}</Td>
@@ -107,20 +112,18 @@ export default function ApplicationsPage() {
                     <Td>
                       <div className="flex flex-wrap gap-2">
                         <Link
-                          to={`/applications/${application.id}`}
-                          className="font-semibold text-brand-700 hover:text-brand-600"
-                        >
-                          View
-                        </Link>
-                        <Link
                           to={`/applications/${application.id}/edit`}
+                          onClick={(event) => event.stopPropagation()}
                           className="font-semibold text-slate-700 hover:text-ink"
                         >
                           Edit
                         </Link>
                         <button
                           type="button"
-                          onClick={() => setApplicationToDelete(application)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setApplicationToDelete(application);
+                          }}
                           className="font-semibold text-orange-700 hover:text-orange-600"
                         >
                           Delete
