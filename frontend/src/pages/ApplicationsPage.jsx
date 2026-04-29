@@ -110,11 +110,11 @@ export default function ApplicationsPage() {
                     </Td>
                     <Td>{formatDate(application.date_applied)}</Td>
                     <Td>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex items-center gap-2 whitespace-nowrap">
                         <Link
                           to={`/applications/${application.id}/edit`}
                           onClick={(event) => event.stopPropagation()}
-                          className="font-semibold text-slate-700 hover:text-ink"
+                          className="focus-ring inline-flex items-center rounded-md border border-line bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm hover:bg-slate-50"
                         >
                           Edit
                         </Link>
@@ -124,7 +124,7 @@ export default function ApplicationsPage() {
                             event.stopPropagation();
                             setApplicationToDelete(application);
                           }}
-                          className="font-semibold text-orange-700 hover:text-orange-600"
+                          className="focus-ring inline-flex items-center rounded-md border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 shadow-sm hover:bg-red-100"
                         >
                           Delete
                         </button>
@@ -149,7 +149,7 @@ export default function ApplicationsPage() {
         title="Delete application?"
         message={
           applicationToDelete
-            ? `This will permanently remove ${applicationToDelete.company} - ${applicationToDelete.role}, including notes and status history.`
+            ? `This will permanently remove ${applicationToDelete.company} - ${applicationToDelete.role}, including its notes.`
             : ""
         }
         confirmLabel="Delete"
